@@ -8,26 +8,56 @@
 
         require_once 'vendor/autoload.php';
         header("Content-Type: text/html; charset=utf-8");
-        //Нужен полный путь иначе не запишет файл
-        $cookiefile = __DIR__.'/cookie.txt';
 
-        $ch = curl_init('http://parser/cookie_test.php');
+        $config = require_once( 'config.php' );
 
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_HEADER, true);
+// ---------------------------------------------------------------------
+// --[ Functions ]------------------------------------------------------
+// ---------------------------------------------------------------------
 
-        //Дальше вариант не самый удачный, в нем нельзя
-        //сымитировать пользователя
-        //curl_setopt($ch, CURLOPT_COOKIE, 'curl_session_cookie=1');
+function request( $url, $postdata = null, $cookiefile = 'tmp/cookie.txt' ){
 
-        curl_setopt($ch, CURLOPT_COOKIEJAR, $cookiefile);
-        curl_setopt($ch, CURLOPT_COOKIEFILE, $cookiefile);
-        //Передаем тольно нормальные куки
-        curl_setopt($ch, CURLOPT_COOKIESESSION, true);
+    $ch = curl_init($url);
 
-        $html = curl_exec($ch);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+    curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:47.0) Gecko/20100101 Firefox/47.0');
 
-        curl_close($ch);
+    curl_setopt($ch, CURLOPT_COOKIEJAR, $cookiefile);
+    curl_setopt($ch, CURLOPT_COOKIEFILE, $cookiefile);
 
-        xprint($html);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+
+
+    if( $postdata ){
+        curl_setopt( $ch, CURLOPT_POSTFIELDS, $postdata );
+    }
+
+    $html = curl_exec($ch);
+    curl_close( $ch );
+    return $html;
+
+
+}
+
+// ---------------------------------------------------------------------
+// --[ Main code ]------------------------------------------------------
+// ---------------------------------------------------------------------
+
+file_put_contents('tmp/cookie.txt','');
+
+//$html = request('https://www.reddit.com/login');
+
+$post = [
+    'op' => 'login',
+    'dest' => 'https://www.reddit.com/',
+
+    'user' => $config_user,
+    'passwd' => $config_passwd,
+];
+
+$html = request('https://www.reddit.com/post/login', $post);
+
+echo $html;
 
