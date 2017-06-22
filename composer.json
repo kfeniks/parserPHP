@@ -1,0 +1,23 @@
+{
+    "name": "alex/curl-tutorial",
+    "description": "Tutorial on cURL",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "alex",
+            "email": "prinz.haruhi@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+        "coderockr/php-query": "dev-master"
+    },
+    "autoload":{
+        "psr-4":{
+            "App\\":"App/"
+        },
+        "files": [
+            "helpers.php"
+        ]
+    }
+}
