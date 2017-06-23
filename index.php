@@ -41,23 +41,21 @@ function request( $url, $postdata = null, $cookiefile = 'tmp/cookie.txt' ){
 
 }
 
-// ---------------------------------------------------------------------
-// --[ Main code ]------------------------------------------------------
-// ---------------------------------------------------------------------
+        // ---------------------------------------------------------------------
+        // --[ Main code ]------------------------------------------------------
+        // ---------------------------------------------------------------------
 
-file_put_contents('tmp/cookie.txt','');
+        file_put_contents('tmp/cookie.txt','');
 
-//$html = request('https://www.reddit.com/login');
+        $post = [
+            'op' => 'login',
+            'dest' => 'https://www.reddit.com/',
 
-$post = [
-    'op' => 'login',
-    'dest' => 'https://www.reddit.com/',
+            'user' => $config_user,
+            'passwd' => $config_passwd,
+        ];
 
-    'user' => $config_user,
-    'passwd' => $config_passwd,
-];
+        $html = request('https://www.reddit.com/post/login', $post);
 
-$html = request('https://www.reddit.com/post/login', $post);
-
-echo $html;
+        echo $html;
 

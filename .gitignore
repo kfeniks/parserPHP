@@ -31,4 +31,4 @@ phpunit.phar
 /example
 /testcase
 
-config.php
+# config.php
